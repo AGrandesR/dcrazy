@@ -1,0 +1,1 @@
+DEBUG=dcrazy:* npm start
