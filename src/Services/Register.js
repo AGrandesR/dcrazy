@@ -19,7 +19,7 @@ async function createRegister(req, res) {
     if(!token || token=='') return res.send(jResponse(102))
     const mailer = new Mail('DCRAZY')
     try {
-        let isSend = await mailer.send('Register DemoCrazy - DCRAZY',mail,'Register into DemoCrazy', token, false) //Put to true and change token to a complete html body
+        let isSend = await mailer.send('Register DemoCrazy - DCRAZY',mail,'Register into DemoCrazy', `<a href=http://localhost:3000/register?regtoken=${token}>Hola</a>`, true) //Put to true and change token to a complete html body
 
         //POSIBLE RESPONSES
         if(isSend) res.json(jResponse(0))
