@@ -1,7 +1,11 @@
 const { request } = require('express');
+
 const {createToken, readToken} = require('../Utils/JWTtool')
 const Mail = require('../Utils/MAILtool')
+const call = require('../Utils/DBtool')
+
 const jResponse = require('./Common/jsonResponse')
+const {checkWithCode} = require('./Common/checkers')
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // S> PUBLIC FUNCTIONS
@@ -9,33 +13,47 @@ const jResponse = require('./Common/jsonResponse')
 //POST /register?(&lng)
 //{dni:****,mail:****,pass:****}
 async function createRegister(req, res) {
-    const lng = (typeof req.query.lng !== 'undefined') ? req.query.lng : 'eng'
     const dni = req.body.dni
     const mail = req.body.mail
     const pass = req.body.pass
 
+    const cCode = checkWithCode(dni, mail, pass)
+    if(cCode!=0) return jResponse(req,res,cCode)
+
     const token = createRegisterToken(dni,mail,pass)
 
-    if(!token || token=='') return res.send(jResponse(102))
+    if(!token || token=='') return jResponse(req,res,102)
     const mailer = new Mail('DCRAZY')
     try {
         let isSend = await mailer.send('Register DemoCrazy - DCRAZY',mail,'Register into DemoCrazy', `<a href=http://localhost:3000/register?regtoken=${token}>Hola</a>`, true) //Put to true and change token to a complete html body
 
         //POSIBLE RESPONSES
-        if(isSend) res.json(jResponse(0))
-        else res.json(jResponse(1))
+        if(isSend) jResponse(req,res,0)
+        else jResponse(req,res,1)
     } catch(e){
         console.error(e)
-        res.json(jResponse(1))
+        jResponse(req,res,1)
     }
 }
 async function confirmRegister(req, res) {
-    const lng = (typeof req.query.lng !== 'undefined') ? req.query.lng : 'eng'
-    const token = req.query.regtoken
-    console.log(req.query)
-    const data = readRegisterToken(token)
-    if(!data) res.json(jResponse(107))
-    res.json(data)
+    try {
+        const token = req.query.regtoken
+
+        const data = readRegisterToken(token)
+
+        if(!data) return jResponse(req,res,107)
+        const cCode = checkWithCode(data.dni, data.mail, data.pass)
+        if(cCode!=0) return jResponse(req,res,cCode)
+        if((new Date).getTime()<data.iat || (new Date).getTime()>(data.iat + 3600)) return jResponse(req,res,109)
+
+                
+
+        jResponse(req,res,0)
+    } catch (e) {
+        console.error(e)
+        jResponse(req,res,1)
+    }
+    
 
 }
 // E> PUBLIC FUNCTIONS
@@ -44,8 +62,10 @@ async function confirmRegister(req, res) {
 ////////////////////////////////////////////////////////////////////////////////////////
 // S> PRIVATE FUNCTIONS
 function check(dni, mail, pass) {
+    
     return false;
 }
+
 function createRegisterToken(dni, mail, pass) {
     //Checkers!!
     if(haveError()) return false
