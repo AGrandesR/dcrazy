@@ -10,6 +10,13 @@ function jResponse(code, lng='eng') {
     jRes.msg = readCode(code, lng)
     return jRes
 }
+function jsonResponse(req, res, code) {
+    let jRes={};
+    jRes.status = isEven(code) ? 'OK':'KO';
+    jRes.code = code
+    jRes.msg = readCode(code, req.query.lng)
+    res.json(jRes);
+}
 // E> PUBLIC FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -17,10 +24,10 @@ function jResponse(code, lng='eng') {
 // S> PRIVATE FUNCTIONS
 function isEven(num) { return !(num % 2);}
 
-function readCode(code, lng) {
+function readCode(code, lng='eng') {
     try{
-        let json = JSON.parse(readFileSync(`../Resources/c${lng}`))
-        msg = json[code]
+        let data = JSON.parse(readFileSync(`src/Resources/responseCodes/codes.${lng}.json`,'utf8'))
+        msg = data[code]
         return msg
     } catch (e) {
         return 'MSGERROR'
@@ -33,4 +40,5 @@ function readCode(code, lng) {
 
 
 
-module.exports = jResponse
+//module.exports = jResponse
+module.exports = jsonResponse
