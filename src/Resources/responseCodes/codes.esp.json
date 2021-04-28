@@ -2,5 +2,6 @@
     "0":"OK sin definir",
     "1":"KO sin definir",
 
-    "107":"Token inválido"
+    "107":"Token inválido",
+    "109":"El token ha expirado, vuelve a registrarte de nuevo."
 }
