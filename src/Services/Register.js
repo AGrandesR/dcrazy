@@ -25,14 +25,21 @@ async function createRegister(req, res) {
     if(!token || token=='') return jResponse(req,res,102)
     const mailer = new Mail('DCRAZY')
     try {
-        let isSend = await mailer.send('Register DemoCrazy - DCRAZY',mail,'Register into DemoCrazy', `<a href=http://localhost:3000/register?regtoken=${token}>Hola</a>`, true) //Put to true and change token to a complete html body
+        let mailResponse = await mailer.send('Register DemoCrazy - DCRAZY',mail,'Register into DemoCrazy', `<a href=http://localhost:3000/register?regtoken=${token}>Hola</a>`, true) //Put to true and change token to a complete html body
 
         //POSIBLE RESPONSES
-        if(isSend) jResponse(req,res,0)
-        else jResponse(req,res,1)
+        if(!(typeof mailResponse.code == "string") && !mailResponse.code=="EMESSAGE") jResponse(req,res,0)
+        else {
+            let eCode=1
+            switch (mailResponse.responseCode) {
+                case 554:           //'554 5.0.0 Error: transaction failed, blame it on the weather: This address does not exist. Please try again'
+                    eCode=154       //This address does not exist. Please try again. 
+                    break
+            }
+            jResponse(req,res,eCode)
+        }
     } catch(e){
-        console.error(e)
-        jResponse(req,res,1)
+        jResponse(req,res,eCode)
     }
 }
 async function confirmRegister(req, res) {
@@ -46,6 +53,7 @@ async function confirmRegister(req, res) {
         if(cCode!=0) return jResponse(req,res,cCode)
         if((new Date).getTime()<data.iat || (new Date).getTime()>(data.iat + 3600)) return jResponse(req,res,109)
 
+        //We have to insert data encrypted in database
                 
 
         jResponse(req,res,0)
