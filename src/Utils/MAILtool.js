@@ -52,11 +52,9 @@ class MAILtool {
             console.log(data)
             try {
                 let info = await this.#transporter.sendMail(data)
-                console.log(info)
-                return(true)
+                return(info)
             } catch (e) {
-                console.error(e)
-                return(false)
+                return(e)
             }
         //})
     }
