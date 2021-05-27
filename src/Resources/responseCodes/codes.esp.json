@@ -3,5 +3,9 @@
     "1":"KO sin definir",
 
     "107":"Token inválido",
-    "109":"El token ha expirado, vuelve a registrarte de nuevo."
+    "109":"El token ha expirado, vuelve a registrarte de nuevo.",
+
+    "151":"The ID is not valid, use a valid ID",
+    "153":"Tu correo no es válido, usa un correo válido (protonmail)",
+    "154":"This address does not exist. Please try again."
 }
