@@ -1,4 +1,5 @@
 const { request } = require('express');
+const bcrypt = require('bcrypt');
 
 const {createToken, readToken} = require('../Utils/JWTtool')
 const Mail = require('../Utils/MAILtool')
@@ -45,6 +46,7 @@ async function createRegister(req, res) {
 }
 async function confirmRegister(req, res) {
     try {
+        
         const token = req.query.regtoken
 
         const data = readRegisterToken(token)
@@ -52,18 +54,29 @@ async function confirmRegister(req, res) {
         if(!data) return jResponse(req,res,107)
         const cCode = checkWithCode(data.dni, data.mail, data.pass)
         if(cCode!=0) return jResponse(req,res,cCode)
-        if((new Date).getTime()<data.iat || (new Date).getTime()>(data.iat + 3600)) return jResponse(req,res,109)
+        console.log("-" + (new Date).getTime() +"<" + data.iat + " && " + (new Date).getTime()+">" +(data.iat + 3600))
+        if((new Date).getTime()>((data.iat + 3600)*1000)) return jResponse(req,res,109)
 
         //We have to insert data encrypted in database
         //Need to make the call
+        let result
+        try {
+            const saltRounds = 10;
+            const hashDNI   = bcrypt.hashSync(data.dni, saltRounds);
+            const hashMAIL  = bcrypt.hashSync(data.mail, saltRounds);
+            const hashPASS  = bcrypt.hashSync(data.pass, saltRounds);
+            result = await call('DC', 'INSERT INTO citizen (dni,mail,pass) VALUES (/**/,/**/,/**/)',[hashDNI, hashMAIL, hashPASS])
+        } catch(e){
+            if(e.code=='23505') return jResponse(req,res,155)
+            jResponse(req,res,1)
+        }
+        console.log(result)
 
         jResponse(req,res,0)
     } catch (e) {
         console.error(e)
         jResponse(req,res,1)
     }
-    
-
 }
 // E> PUBLIC FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////
