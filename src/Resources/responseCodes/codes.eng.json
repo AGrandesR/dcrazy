@@ -6,5 +6,6 @@
     "109":"Your token for register expired. Register again.",
     "151":"The ID is not valid, use a valid ID",
     "153":"Your email is not valid, use a valid email (protonmail)",
-    "154":"This address does not exist. Please try again."
+    "154":"This address does not exist. Please try again.",
+    "155":"You can duplicate data. Your dni or mail is already on use."
 }
