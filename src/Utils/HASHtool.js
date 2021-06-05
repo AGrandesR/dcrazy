@@ -6,8 +6,8 @@ const bcrypt = require('bcrypt');
 function createHash(myPlaintextPassword, flag=false) {
     try{
         const envKey = flag ? `${flag}_SALTROUNDS` : 'SALTROUNDS'
-        const rawHASH = bcrypt.hashSync(myPlaintextPassword, process.env[envKey]);
-        const hash = hash.slice(hash.lastIndexOf("$"))
+        const rawHASH = bcrypt.hashSync(myPlaintextPassword, parseInt(process.env[envKey]));
+        const hash = rawHASH.slice(rawHASH.lastIndexOf("$") + 1)
         console.log("New hash: " + hash)
         return hash
     } catch (e){
