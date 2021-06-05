@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const {createToken, readToken} = require('../Utils/JWTtool')
 const Mail = require('../Utils/MAILtool')
 const call = require('../Utils/DBtool')
+const {createHash} = require('../Utils/HASHtool')
 
 const jResponse = require('./Common/jsonResponse')
 const {checkWithCode} = require('./Common/checkers')
@@ -62,9 +63,9 @@ async function confirmRegister(req, res) {
         let result
         try {
             const saltRounds = 10;
-            const hashDNI   = bcrypt.hashSync(data.dni, saltRounds);
-            const hashMAIL  = bcrypt.hashSync(data.mail, saltRounds);
-            const hashPASS  = bcrypt.hashSync(data.pass, saltRounds);
+            const hashDNI   = createHash(data.dni);
+            const hashMAIL  = createHash(data.mail);
+            const hashPASS  = createHash(data.pass);
             result = await call('DC', 'INSERT INTO citizen (dni,mail,pass) VALUES (/**/,/**/,/**/)',[hashDNI, hashMAIL, hashPASS])
         } catch(e){
             if(e.code=='23505') return jResponse(req,res,155)
