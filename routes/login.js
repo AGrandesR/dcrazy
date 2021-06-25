@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const Login = require('../src/Services/Login')
 
-
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
 router.post('/', function(req, res, next) {
-  res.send('respond with a resource');
+  Login.getToken(req, res);
 });
-
+/*
+router.get('/', function(req, res, next) {
+  Register.confirmRegister(req, res);
+});*/
 module.exports = router;

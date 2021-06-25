@@ -7,5 +7,8 @@
     "151":"The ID is not valid, use a valid ID",
     "153":"Your email is not valid, use a valid email (protonmail)",
     "154":"This address does not exist. Please try again.",
-    "155":"You can duplicate data. Your dni or mail is already on use."
+    "155":"You can duplicate data. Your dni or mail is already on use.",
+
+    "191":"Problem with UTF8 from database, please notify this error!"
+
 }
