@@ -11,7 +11,8 @@ function createHash(myPlaintextPassword, flag=false) {
         console.log(rawHASH)
         const hash = rawHASH.slice(rawHASH.lastIndexOf("$") + 1)
         console.log("New hash: " + hash)
-        return hash
+        return rawHASH
+        //@TODO We have to improve to hide the salt from database, but until that we save the rawHASH : )
     } catch (e){
         console.error(e)
         return false;
