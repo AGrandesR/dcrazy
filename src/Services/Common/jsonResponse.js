@@ -10,11 +10,12 @@ function jResponse(code, lng='eng') {
     jRes.msg = readCode(code, lng)
     return jRes
 }
-function jsonResponse(req, res, code) {
+function jsonResponse(req, res, code, data=false) {
     let jRes={};
     jRes.status = isEven(code) ? 'OK':'KO';
     jRes.code = code
     jRes.msg = readCode(code, req.query.lng)
+    if(data) jRes.data = data
     res.json(jRes);
 }
 // E> PUBLIC FUNCTIONS
