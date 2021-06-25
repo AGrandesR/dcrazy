@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const {createToken, readToken} = require('../Utils/JWTtool')
 const Mail = require('../Utils/MAILtool')
 const call = require('../Utils/DBtool')
-const {createHash} = require('../Utils/HASHtool')
+const {createHash, createBasicHash} = require('../Utils/HASHtool')
 
 const jResponse = require('./Common/jsonResponse')
 const {checkWithCode} = require('./Common/checkers')
@@ -28,11 +28,11 @@ async function createRegister(req, res) {
     const mailer = new Mail('DMAIL')
     try {
         let mailResponse = await mailer.send('Register DemoCrazy - DCRAZY',mail,'Register into DemoCrazy', `<a href=http://localhost:3000/register?regtoken=${token}>Hola</a>`, true) //Put to true and change token to a complete html body
-        console.log(mailResponse)
+        // console.log(mailResponse)
         //POSIBLE RESPONSES
         if(mailResponse.accepted[0]==mail) jResponse(req,res,0)
         else {
-            console.log("response code: " + mailResponse.responseCode)
+            // console.log("response code: " + mailResponse.responseCode)
             let eCode=1
             switch (mailResponse.responseCode) {
                 case 554:           //'554 5.0.0 Error: transaction failed, blame it on the weather: This address does not exist. Please try again'
@@ -55,7 +55,7 @@ async function confirmRegister(req, res) {
         if(!data) return jResponse(req,res,107)
         const cCode = checkWithCode(data.dni, data.mail, data.pass)
         if(cCode!=0) return jResponse(req,res,cCode)
-        console.log("-" + (new Date).getTime() +"<" + data.iat + " && " + (new Date).getTime()+">" +(data.iat + 3600))
+        // console.log("-" + (new Date).getTime() +"<" + data.iat + " && " + (new Date).getTime()+">" +(data.iat + 3600))
         if((new Date).getTime()>((data.iat + 3600)*1000)) return jResponse(req,res,109)
 
         //We have to insert data encrypted in database
@@ -64,19 +64,20 @@ async function confirmRegister(req, res) {
         try {
             const saltRounds = 10;
             const hashDNI   = createHash(data.dni);
-            const hashMAIL  = createHash(data.mail);
+            const hashMAIL  = createBasicHash(data.mail);
             const hashPASS  = createHash(data.pass);
             result = await call('DC', 'INSERT INTO citizen (dni,mail,pass) VALUES (/**/,/**/,/**/)',[hashDNI, hashMAIL, hashPASS])
         } catch(e){
+            console.log(e)
             if(e.code=='23505') return jResponse(req,res,155)
-            jResponse(req,res,1)
+            return jResponse(req,res,1)
         }
         console.log(result)
 
-        jResponse(req,res,0)
+        return jResponse(req,res,0)
     } catch (e) {
         console.error(e)
-        jResponse(req,res,1)
+        return jResponse(req,res,1)
     }
 }
 // E> PUBLIC FUNCTIONS
