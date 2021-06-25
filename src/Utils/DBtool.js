@@ -50,7 +50,7 @@ async function usePsql(flag, sql, params=[]){
   const { Client } = require('pg')
   let count=1
   while(sql.indexOf('/**/')!=-1){
-    sql = str.replace('/**/', `$${count}`)
+    sql = sql.replace('/**/', `$${count}`)
     count++
   }
   return new Promise(async (res,rej)=>{
