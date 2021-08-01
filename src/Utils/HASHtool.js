@@ -30,6 +30,11 @@ function createBasicHash(myPlaintextPassword) {
 
 function checkHash(myPlaintextPassword, myHashPassword, flag=false) {
     try {
+        myHashPassword = process.env['HASHPREFIX'] + myHashPassword
+        console.log("-S>checkHash-----------------------------------------------------")
+        console.log(myPlaintextPassword)
+        console.log(myHashPassword)
+        console.log("-E>checkHash-----------------------------------------------------")
         return bcrypt.compareSync(myPlaintextPassword, myHashPassword);
     } catch(e){
         console.error(e)

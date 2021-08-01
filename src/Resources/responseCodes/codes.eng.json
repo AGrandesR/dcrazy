@@ -9,6 +9,9 @@
     "154":"This address does not exist. Please try again.",
     "155":"You can duplicate data. Your dni or mail is already on use.",
 
-    "191":"Problem with UTF8 from database, please notify this error!"
+    "191":"Problem with UTF8 from database, please notify this error!",
+
+    "500":"We found the id of the person that you trust",
+    "502":"You don't trust to anyone"
 
 }

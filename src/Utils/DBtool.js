@@ -64,10 +64,13 @@ async function usePsql(flag, sql, params=[]){
       })
       await client.connect()
       //const results = await client.query('SELECT $1::text as message', ['Hello world!'])
+      console.log(sql);
+      console.log(params)
       const results = await client.query(sql, params)
       console.log(res) // Hello world!
       await client.end()
-      res(results)
+      if(typeof results.rows != undefined) res(results.rows)
+      else res(false)
     } catch(e){
       rej(e)
     }
