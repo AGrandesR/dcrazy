@@ -37,7 +37,6 @@ async function readTrustChain(req, res) {
         UNION ALL
         SELECT c.trust FROM citizen c
         INNER JOIN loop l ON l.trust=c.id
-        /*WHERE loop.id=c.trust*/
     ) select * FROM loop;
     `;
     const id = req.userData.id
