@@ -29,6 +29,22 @@ async function readTrust(req, res) {
     if(rawResponse[0].trust == null) return jResponse(req,res,502)
     return jResponse(req,res,500,{"trusted":rawResponse[0].trust})
 }
+
+async function readTrustChain(req, res) {
+    const SQL = `
+    with loop as (
+        SELECT trust FROM citizen WHERE id=/**/ and trust NOT NULL
+        UNION ALL
+        SELECT c.trust FROM citizen c
+        INNER JOIN loop l ON l.trust=c.id
+        /*WHERE loop.id=c.trust*/
+    ) select * FROM loop;
+    `;
+    const id = req.userData.id
+    const rawResponse = await call('DC', SQL,[id])
+    if(rawResponse[0].trust == null) return jResponse(req,res,502)
+    return jResponse(req,res,500,{"trusted":rawResponse[0].trust})
+}
 // E> PUBLIC FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////
 
