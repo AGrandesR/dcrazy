@@ -4,6 +4,7 @@
 
     "107":"Not valid received token",
     "109":"Your token for register expired. Register again.",
+    "111":"Problem with internal mail system. Please notify us.",
     "151":"The ID is not valid, use a valid ID",
     "153":"Your email is not valid, use a valid email (protonmail)",
     "154":"This address does not exist. Please try again.",

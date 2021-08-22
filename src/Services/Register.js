@@ -42,7 +42,8 @@ async function createRegister(req, res) {
             jResponse(req,res,eCode)
         }
     } catch(e){
-        jResponse(req,res,eCode)
+        console.log(e)
+        jResponse(req,res,111)
     }
 }
 async function confirmRegister(req, res) {
