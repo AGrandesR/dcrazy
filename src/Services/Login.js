@@ -3,7 +3,7 @@ const { request } = require('express');
 
 const {createToken, readToken} = require('../Utils/JWTtool')
 // const Mail = require('../Utils/MAILtool')
-const call = require('../Utils/DBtool')
+const citizens = require('../External/DB/citizens')
 const {createHash, createBasicHash, checkHash} = require('../Utils/HASHtool')
 
 const jResponse = require('./Common/jsonResponse')
@@ -28,7 +28,8 @@ async function getToken(req, res) {
 
     //READ IN DATABASE IF EXIST
     try {
-        const rawResponse = await call('DC', 'SELECT id, dni, mail, pass FROM citizen WHERE mail=/**/',[hashMAIL])
+        const rawResponse = await citizens.findCitizenbyMail(hashMAIL);
+        
         if(!rawResponse) return jResponse(req, res, 3)
         const data = rawResponse[0]
         if(!checkHash(pass,data.pass)) return jResponse(req,res,5)

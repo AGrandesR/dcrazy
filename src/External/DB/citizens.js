@@ -1,0 +1,30 @@
+const call = require('../../Utils/DBtool')
+
+////////////////////////////////////////////////////////////////////////////////////////
+// S> PUBLIC FUNCTIONS
+async function findCitizenbyMail(mail) {
+    return new Promise(async (resolved,rejected)=>{
+        try{
+            const rawResponse = await call('DC', 'SELECT id, dni, mail, pass FROM citizen WHERE mail=/**/',[mail])
+            resolved(rawResponse)
+        } catch (e){
+            rejected(e)
+        }
+    })
+    
+}
+// E> PUBLIC FUNCTIONS
+////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////
+// S> PRIVATE FUNCTIONS
+
+
+// E> PRIVATE FUNCTIONS
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+module.exports = {
+    findCitizenbyMail,
+
+}
