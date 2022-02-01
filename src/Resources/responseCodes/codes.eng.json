@@ -13,6 +13,7 @@
     "191":"Problem with UTF8 from database, please notify this error!",
 
     "500":"We found the id of the person that you trust",
-    "502":"You don't trust to anyone"
+    "502":"You don't trust to anyone",
 
+    "605":"You can't trust yourself"
 }

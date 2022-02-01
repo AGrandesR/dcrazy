@@ -5,6 +5,7 @@ require('dotenv').config()
 
 //Always use /**/ to indicate params
 async function call(flag, sql, params=[]) {
+  //if sql = string una petición, sino podemos mirar de hacer un pool si se trata de un array
   if(flag!='') flag+='_'
   const type = process.env[`${flag}TYPE`]
 
